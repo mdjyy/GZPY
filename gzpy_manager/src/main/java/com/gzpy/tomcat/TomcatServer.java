@@ -81,7 +81,7 @@ public class TomcatServer {
 
 								//比如下载一个图片文件，我这里直接给定一个图片路径来模拟下载的情况
 								if (resource.endsWith(".jpg")) {
-									transferFileHandle("d://123.jpg", client);
+									transferFileHandle("p://123.jpg", client);
 									closeSocket(client);
 									continue;
 

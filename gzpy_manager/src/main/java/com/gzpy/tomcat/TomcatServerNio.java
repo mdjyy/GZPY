@@ -27,23 +27,31 @@ import org.slf4j.LoggerFactory;
 
 public class TomcatServerNio { 
 	private static final Logger logger = LoggerFactory.getLogger(TomcatServerNio.class);
-    //端口号   
-	private static int port;
-    //自身实例
+	//端口号   
+	private int port;
+	//自身实例
 	private static TomcatServerNio tomcat;
 	//server管道
 	private ServerSocketChannel serverSocket;
 	//选择器
 	private Selector select;
 	private static final Object lock = new Object();
+	
 	private TomcatServerNio(int port) {
-		TomcatServerNio.port = port;
 		try {
+			
+			this.port = port;
+			
 			select = Selector.open();
+			
 			serverSocket = ServerSocketChannel.open();
+			
 			serverSocket.configureBlocking(false);
-			SocketAddress address = new InetSocketAddress(port);
-		    serverSocket.bind(address) ;
+			
+			SocketAddress address = new InetSocketAddress(this.port);
+			
+			serverSocket.bind(address) ;
+
 		} catch (IOException e) {
 			logger.error("初始化失败,端口号"+port,e);
 		}
@@ -51,10 +59,10 @@ public class TomcatServerNio {
 	//启动
 	public static void start(int port) {
 		if(tomcat==null) {
-		    synchronized (lock) {
-		    	if(tomcat==null) {
-		    		tomcat = new TomcatServerNio(port);
-		    	}
+			synchronized (lock) {
+				if(tomcat==null) {
+					tomcat = new TomcatServerNio(port);
+				}
 			}
 		}
 		tomcat.regist();
@@ -72,10 +80,10 @@ public class TomcatServerNio {
 	public void accept() {
 		new HandleThread().start();
 	}
-	
+
 	class HandleThread extends Thread{ 
-	    private ByteBuffer readBuffer = ByteBuffer.allocate(1024);
-	    private ByteBuffer sendBuffer = ByteBuffer.allocate(1024);
+		private ByteBuffer readBuffer = ByteBuffer.allocate(1024);
+		private ByteBuffer sendBuffer = ByteBuffer.allocate(1024);
 		public void handle() {
 			while(true) {
 				try {
@@ -89,16 +97,16 @@ public class TomcatServerNio {
 							//接受
 							if(key.isAcceptable()) {
 								ServerSocketChannel server = (ServerSocketChannel) key.channel();
-					            SocketChannel client = server.accept();
-					            client.configureBlocking(false);
-					            if(client.isConnected()) {
-					            	logger.info("客户端已经连接");
-					            	client.register(select, SelectionKey.OP_READ);
-					            }
-					            //获取事件为读取
+								SocketChannel client = server.accept();
+								client.configureBlocking(false);
+								if(client.isConnected()) {
+									logger.info("客户端已经连接");
+									client.register(select, SelectionKey.OP_READ);
+								}
+								//获取事件为读取
 							}else if(key.isReadable()) {
 								SocketChannel client = (SocketChannel) key.channel();
-					            client.configureBlocking(false);
+								client.configureBlocking(false);
 								doReadHandle(client);
 							}
 						}
@@ -119,26 +127,26 @@ public class TomcatServerNio {
 				BufferedReader in = new BufferedReader(
 						new InputStreamReader(
 								new ByteArrayInputStream(readBuffer.array())));
-                //第一次读取时请求行第一行
+				//第一次读取时请求行第一行
 				String line = in.readLine();
-                logger.info("接受请求行第一行:"+line);
-                //拆分http请求路径，取http需要请求的资源完整路径
+				logger.info("接受请求行第一行:"+line);
+				//拆分http请求路径，取http需要请求的资源完整路径
 				String resource = line.substring(line.indexOf('/'),line.lastIndexOf('/') - 5);
 				logger.info("请求的资源:"+resource);
-                
-                resource = URLDecoder.decode(resource, "UTF-8");
-                
-            	//获取到这次请求的方法类型，比如get或post请求
+
+				resource = URLDecoder.decode(resource, "UTF-8");
+
+				//获取到这次请求的方法类型，比如get或post请求
 				String method = new StringTokenizer(line).nextElement().toString();
-                logger.info("请求方法:"+method);
-				
+				logger.info("请求方法:"+method);
+
 				while((line=in.readLine())!=null) {
 					//当line等于空行的时候标志Header消息结束
 					if ("".equals(line)) {
 						break;
 					}
 					logger.info("请求头内容： "+line);
-                }
+				}
 				readBuffer.clear();
 				send(client,method,resource);
 			} catch (IOException e) {
@@ -195,17 +203,17 @@ public class TomcatServerNio {
 					client.write(sendBuffer);
 					sendBuffer.clear();
 				}
-			//	client.register(select, SelectionKey.OP_CONNECT);
-		        client.close();
+				//	client.register(select, SelectionKey.OP_CONNECT);
+				client.close();
 			}
 		}
-		
+
 		@Override
 		public void run() {
 			handle();
 		}
 	}
-	
+	//启动
 	public static void main(String[] args) {
 		TomcatServerNio.start(8888);
 	}

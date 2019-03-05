@@ -1,0 +1,8 @@
+person:
+    dog:
+        name: haha
+        age: 16
+    list:
+        - 10
+        - 20
+    map: {k1: 1, k2: 2}

@@ -52,7 +52,7 @@ public class TomcatServerNio {
             //只有非阻塞的通道才可以注册到选择器上
 			serverSocket.configureBlocking(false);
 
-			SocketAddress address = new InetSocketAddress(this.port);
+			SocketAddress address = new InetSocketAddress("1111",this.port);
             //绑定端口
 			serverSocket.bind(address) ;
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.boot.autoconfigure.http.HttpProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,7 +15,11 @@ import com.gzpy.demo.po.Person;
  * 类似于之前的<beans id = getPerson ></beans>这种值注入
  * */
 @Configuration
+@EnableConfigurationProperties(HttpProperties.class)
 public class ConfigProperties {
+	public ConfigProperties(HttpProperties p) {
+       System.out.println(p.getEncoding());
+	}
     @Bean
 	public Person getPerson() {
 		Person person = new Person();

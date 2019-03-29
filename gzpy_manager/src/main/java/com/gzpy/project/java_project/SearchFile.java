@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
@@ -80,7 +81,7 @@ public class SearchFile {
 			}
 		});
 		for(File f:childs) {
-			log.info("查找文件: "+f.getPath());
+			log.info("查找文件:{}", f.getPath());
 			if(f.isFile()) {
 				list.add(f);
 			}else {
@@ -135,7 +136,7 @@ public class SearchFile {
 					return true;
 				}
 				for(String suff:suffix) {
-					if(pathname.getName().endsWith(suff)) {
+					if("all".equals(suff)||pathname.getName().endsWith(suff)) {
 						return checkFile(pathname, content);
 					}
 				}
@@ -144,7 +145,6 @@ public class SearchFile {
 		});
 
 		for(File f: files) {
-			//log.info("查找文件: "+f.getPath());
 			if(f.isFile()) {
 				list.add(f);
 			}else {
@@ -192,7 +192,7 @@ public class SearchFile {
 			demo.setNum_Content(map);
 			demo.setKey(content);
 			demo.setFile(file);
-			log.debug("---加入队列---:"+demo);
+			log.debug("---加入队列---:{}",demo);
 			queen.add(demo);
 			return true;
 		}
@@ -339,6 +339,11 @@ public class SearchFile {
 				e.printStackTrace();
 			}
 		}
+
+		@Override
+		public String getTemp() {
+			return file.getPath();
+		}
 	}
 
 	//消费者将队列的信息持久化
@@ -347,6 +352,8 @@ public class SearchFile {
 		public abstract void persistFile(FileDemo demo);
 		//提交和释放资源等操作
 		public abstract void close();
+		
+		public abstract String getTemp();
 		@Override
 		public void run() {
 			log.debug("消费者线程启动！");
@@ -361,6 +368,7 @@ public class SearchFile {
 					close();
 				}
 				log.debug("消费者处理完");
+				log.info("保存至文件:{}",getTemp());
 			} catch (InterruptedException e) {
 				log.error("消费者进程被中断",e);
 				e.printStackTrace();
@@ -370,6 +378,8 @@ public class SearchFile {
 		}
 
 	} 
+	
+	
 	public static void main(String[] args) throws Exception {
 		//				String path = "C:\\Program Files (x86)\\MySQL";
 		//				String key = "undo";
@@ -382,8 +392,12 @@ public class SearchFile {
 		 * FileDemo[] files = getQueen(); for(FileDemo demo:files) {
 		 * System.out.println(demo); }
 		 */
-		String path = "P:\\HNBOSS";
-		String keyContent = "((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))";
-		saveandSearch(path, keyContent,"xml","java","jsp");
+		
+//		  String path = "P:\\HNBOSS"; String keyContent =
+//		  "((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))";
+//		  saveandSearch(path, keyContent,"all");
+		 
+		String p = "C:/Users/mdj/Desktop/新建文件夹/和助手和助手需求文档";
+		saveandSearch(p,"二维码","all");
 	}
 }

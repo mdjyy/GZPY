@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>模拟Http调用请求头</title>
+<script type="text/javascript" src="js/require.js"></script>
+<script type="text/javascript" src="js/require-config.js"></script>
+<script>
+require(['jquery'],function($){ 
+    $("#btn").click(function(){
+    	var line = $("table").find("tr").length;
+    	var html = getTemplete().replace("{line}",line)
+    	$("table tr:last").after(html);
+    });
+    $("#sub").click(function(){
+         var params = getParam();
+         console.log( JSON.stringify(params));
+         $.ajax({
+        	  type: 'POST',
+        	  url: 'html.do',
+        	  data : JSON.stringify(params),
+        	  success: function(data){
+        		  $("#show").html(data);
+        		  console.log(data);
+        	  },
+        	  error:function(data){
+        		  alert("error");
+        	  },
+        	  //接受服务器返回的数据类型
+         	 /*  dataType: 'json', */
+         	 //向服务器发送的数据类型
+        	  contentType: "application/json" 
+        });
+    });
+    function getTemplete(){
+    	var html = "<tr>"+
+    	               "<td>{line}</td>"+
+    	               "<td><input type='text'/></td>"+
+    	               "<td><input type='text'/></td>"+
+    	           "</tr>"
+        return html;
+    }
+
+    function getParam(){
+    	var trs = $("table tr");
+    	var params = {};
+        for(var i=1;i<trs.length;i++){
+        	var tds = trs.eq(i).find("td");
+        	var key = tds.eq(1).find("input").val();
+        	var value = tds.eq(2).find("input").val();
+        	if(key!=null||key!=""){
+        		params[key]=value;
+        	}
+        }    	
+        return params;
+    }
+    
+});
+</script>
+</head>
+<body>
+	<Button id="btn">添加一行</Button>
+	<table style="border-style: dotted;">
+		<tr>
+			<td style="width: 30%;">请求头添加</td>
+			<td style="width: 30%;">key</td>
+			<td style="width: 30%;">value</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td><input type='text' /></td>
+			<td><input type='text' /></td>
+		</tr>
+	</table>
+	<Button id="sub">提交</Button>
+	<div id ="show" style="height:100px;weidth:100px;background: yellow;"></div>
+	
+</body>
+</html>
+

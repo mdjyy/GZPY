@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <Description>
+ 5、profiles
+多环境支持，不同的环境用不同的配置文件
+1、如果是用properties配置文件,在主配置文件中spring.profiles.active=dev
+2、如果使用yml作为配置文件，yml有一种语法叫多文档支持,使用---来分割成不同的文档,在个
+个文档中使用spring:profiles:dev 指定，在最上面激活代码为
+spring:profiles:active:dev
+3、用命令行激活，spring.profiles.active=dev,或者给jvm添加系统变量等
+
+6、配置文件的加载顺序与优先级，高优先级覆盖低优先级
+  file路径下的config/
+  file路径下/
+  classpath:config/
+  classpath:/
+    优先级由高到低
+  
+    项目打包成功后 ，可以通过命令行spring.config.location改变默认的配置文件位置,
+    指定的配置文件和默认加载的形成互补配置 
+ </Description>

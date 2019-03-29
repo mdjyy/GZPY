@@ -1,8 +1,27 @@
 person:
     dog:
-        name: haha
+        name: haha${random.int,100}
         age: 16
     list:
         - 10
         - 20
-    map: {k1: 1, k2: 2}
+        - ${person.dog.name:hello}
+        - ${person.dog.address:hello}
+    map: {k1: 1, k2: 12}
+logging:
+   level:
+      root: info
+---
+spring:
+  profiles:dev
+person:
+    dog:
+        name: ss
+        age: 1
+    list:
+        - 10
+        - 20
+        - ${person.dog.name:hello}
+        - ${person.dog.address:hello}
+    map: {k1: 1, k2: 12}
+---

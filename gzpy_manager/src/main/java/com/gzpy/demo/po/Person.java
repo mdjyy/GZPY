@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
         - 20
     map: {k1: 1, k2: 2}
  * */
-//@ConfigurationProperties(prefix="person")
-//@Component
+@ConfigurationProperties(prefix="person")
+@Component
 public class Person {
     private Dog dog;
     private List list;

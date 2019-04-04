@@ -80,12 +80,14 @@ public class SearchFile {
 				return false;
 			}
 		});
-		for(File f:childs) {
-			log.info("查找文件:{}", f.getPath());
-			if(f.isFile()) {
-				list.add(f);
-			}else {
-				Collections.addAll(list, searchFile(f.getPath(),key));
+		if(childs!=null) {
+			for(File f:childs) {
+				//log.info("查找文件:{}", f.getPath());
+				if(f.isFile()) {
+					list.add(f);
+				}else {
+					Collections.addAll(list, searchFile(f.getPath(),key));
+				}
 			}
 		}
 		return list.toArray(new File[0]);
@@ -98,13 +100,20 @@ public class SearchFile {
 	 * @return void
 	 * @throws Exception 
 	 * */
-	public static void saveandSearch(String path,String content,String...suffix) throws Exception {
+	public static void saveandSearch(String path,String content,String...suffix) {
 		//设置成未执行完
 		isfileCompleted.compareAndSet(true, false);
 		
 		new Thread(thread).start();
 		
-		File file[] = searchFileByContent(path, content, suffix);
+		File file[] = null;
+		try {
+			file = searchFileByContent(path, content, suffix);
+		} catch (Exception e) {
+			log.error("程序出错{}",e.getMessage());
+			e.printStackTrace();
+			isfileCompleted.compareAndSet(false, true);
+		}
 		
 		if(file.length==0) {
 			log.info("没有符合条件的文件");
@@ -143,14 +152,15 @@ public class SearchFile {
 				return false;
 			}
 		});
-
-		for(File f: files) {
-			if(f.isFile()) {
-				list.add(f);
-			}else {
-				Collections.addAll(list, searchFileByContent(f.getPath(), content, suffix));
-			}
-		}
+        if(files!=null) {
+        	for(File f: files) {
+        		if(f.isFile()) {
+        			list.add(f);
+        		}else {
+        			Collections.addAll(list, searchFileByContent(f.getPath(), content, suffix));
+        		}
+        	}
+        }
 		return list.toArray(new File[0]);
 	}
 	
@@ -359,7 +369,7 @@ public class SearchFile {
 			log.debug("消费者线程启动！");
 			FileDemo demo = null; 
 			try {
-				while((demo = queen.poll(1,TimeUnit.SECONDS))!=null||!isfileCompleted.get()) {
+				while((demo = queen.poll(1,TimeUnit.MILLISECONDS))!=null||!isfileCompleted.get()) {
 					if(demo==null) {
 						continue;
 					}
@@ -395,9 +405,15 @@ public class SearchFile {
 		
 //		  String path = "P:\\HNBOSS"; String keyContent =
 //		  "((25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))";
-//		  saveandSearch(path, keyContent,"all");
-		 
-		String p = "C:/Users/mdj/Desktop/新建文件夹/和助手和助手需求文档";
-		saveandSearch(p,"二维码","all");
+//		  saveandSearch(path, keyContent,"txt");
+		String p = "c://"; 
+		saveandSearch(p,"i34BwYaJt6YzkTbl1KPyXj0U","txt");
+//		System.out.println(file);
+//		List<String> list = new ArrayList();
+//		String s[] = list.toArray(new String[0]);
+//		System.out.println(s[0]);
+//        for(String s1:s) {
+//        	System.out.println(s1);
+//        }		
 	}
 }

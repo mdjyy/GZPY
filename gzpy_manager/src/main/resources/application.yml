@@ -10,7 +10,7 @@ person:
     map: {k1: 1, k2: 12}
 logging:
    level:
-      root: info
+      root: error
 ---
 spring:
   profiles:dev

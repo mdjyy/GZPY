@@ -18,11 +18,12 @@ import org.springframework.web.servlet.HandlerMapping;
 public class DemoController {
     @RequestMapping("/hello.do")
     @ResponseBody
-	public String HelloWorld(HttpServletRequest req) {
+	public String HelloWorld(HttpServletRequest req){
     	Enumeration<String> e = req.getHeaderNames();
     	while(e.hasMoreElements()) {
     		System.out.println(e.nextElement());
     	}
+    	int i = 1/0; 
     	return "Hello World";
     }
     @RequestMapping("/leaf.do")

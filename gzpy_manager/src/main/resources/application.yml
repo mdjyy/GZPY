@@ -12,9 +12,7 @@ logging:
    level:
       root: error
 ---
-spring:
-  profiles:dev
-person:
+spring:   profiles: devperson:
     dog:
         name: ss
         age: 1
@@ -24,4 +22,3 @@ person:
         - ${person.dog.name:hello}
         - ${person.dog.address:hello}
     map: {k1: 1, k2: 12}
----

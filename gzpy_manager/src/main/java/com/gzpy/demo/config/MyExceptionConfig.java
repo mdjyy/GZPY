@@ -21,7 +21,9 @@ public class MyExceptionConfig {
 				Map map =  (Map) webRequest.getAttribute("ext", RequestAttributes.SCOPE_REQUEST);
 				Map<String, Object> errorAttributes = 
 						super.getErrorAttributes(webRequest, includeStackTrace);
-				errorAttributes.putAll(map);
+				if(null!=map) {
+					errorAttributes.putAll(map);
+				}
 				return errorAttributes;
 			}
 		};

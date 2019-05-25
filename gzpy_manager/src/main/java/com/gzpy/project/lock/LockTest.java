@@ -22,7 +22,6 @@ public class LockTest {
 		}
 		return 0;
 	}
-
 	@Test
 	public  void a() {
 

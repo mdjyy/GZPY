@@ -29,7 +29,7 @@ public class UserLogin {
             user.setPassword(password);
             session.setAttribute("myuser",user);
             //10s注销
-        	session.setMaxInactiveInterval(10);
+        	session.setMaxInactiveInterval(60*30);
     	    redirectAttributes.addFlashAttribute("msg","hahah");
 	    	return "redirect:/Head";
 	    }

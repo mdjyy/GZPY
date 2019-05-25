@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gzpy.demo.dao.EmployeeMapper">
+  <select id="queryEmployeeById" resultType="com.gzpy.demo.po.Employee" >
+    select *,d_id as did from employee where id = #{id}
+  </select>
+  
+  <insert id="addEmployee">
+    insert into employee(lastName,email,gender,d_id)
+        values(#{lastName},#{email},#{gender},#{did})
+  </insert>
+</mapper>

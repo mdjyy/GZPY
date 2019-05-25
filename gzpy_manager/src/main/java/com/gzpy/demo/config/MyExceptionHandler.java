@@ -16,6 +16,7 @@ public class MyExceptionHandler {
     
 	@ExceptionHandler(Exception.class)
 	public String handlerException(Exception e,HttpServletRequest request) {
+		System.out.println(e);
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("code", "9999");
         map.put("exception",e);

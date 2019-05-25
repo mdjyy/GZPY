@@ -1,5 +1,6 @@
 package com.gzpy.demo.config;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -7,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.FlashMap;
@@ -92,7 +96,7 @@ public class MyMvcConfifg  implements WebMvcConfigurer{
 				  * 1、在2.0以上的boot自定义拦截器会拦截静态资源
 				  * */
 				 registry.addInterceptor(c).addPathPatterns("/mdj.do"); 
-				 String excludePath[] = {"/**/**.js","/login.do","/","/index.html","/**/**.css","/demo/asserts/**","/webjars/**","/user/login"};
+				 String excludePath[] = {"/**/**.js","/login.do","/","/index.html","/**/**.css","/demo/asserts/**","/webjars/**","/user/login","/error"};
 				 registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**").excludePathPatterns(excludePath);
 			 }
 			 

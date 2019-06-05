@@ -44,12 +44,12 @@ public class StringToBin {
         } 
         return result; 
     } 
-    
 	public static void main(String[] args) {
 		//将数字10转为二进制
 		System.out.println("int转为二进制:"+Integer.toBinaryString(10));
 		//字符串10转为二进制
 		System.out.println(StrToBinstr("10"));
+		System.out.println("二进制转为字符"+BinstrtoSring("00110001 110000"));
 		//1100110 1101111 1101111 1100010 1100001 1110010
 		System.out.println("字符串转为二进制:"+StrToBinstr("foobar"));
 		/**

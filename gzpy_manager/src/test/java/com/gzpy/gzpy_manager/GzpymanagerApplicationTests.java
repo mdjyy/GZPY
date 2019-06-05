@@ -101,7 +101,7 @@ public class GzpymanagerApplicationTests {
 	@Test
 	public void redis01() {
 		Employee e= employeeDao.queryEmployeeById(1);
-		Jackson2JsonRedisSerializer jackson = new Jackson2JsonRedisSerializer(Object.class);
+		Jackson2JsonRedisSerializer<Object> jackson = new Jackson2JsonRedisSerializer<Object>(Object.class);
 		/**
 		 * 在bean创建时，我们只需要设置setDefaultSerializer，因为redisTemplate继承了InitializingBean
 		 * 初始化的时候就会调用afterPropertiesSet将DefaultSerializer的值复值给KeySerializer、
@@ -109,10 +109,10 @@ public class GzpymanagerApplicationTests {
 		 * 而在这里测试，我们取到了这个bean，设置DefaultSerializer是不会将其复制给上述序列化器的，所以我给他们手动赋值了
 		 * 
 		 * */
-		redisTemplate.setDefaultSerializer(jackson);
-		redisTemplate.setKeySerializer(jackson);
-		redisTemplate.setValueSerializer(jackson);
-        redisTemplate.opsForValue().set("wo", e);
+	//	redisTemplate.setDefaultSerializer(jackson);
+		//redisTemplate.setKeySerializer(jackson);
+		//redisTemplate.setValueSerializer(jackson);
+        redisTemplate.opsForValue().set("niu1", e);
 	}
 	
 	@Test
